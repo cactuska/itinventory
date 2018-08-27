@@ -33,7 +33,7 @@
 <body>
 <div class="container-fluid" style="background: white;">
 
-    <nav class="navbar navbar-expand-sm sticky-top bg-dark navbar-dark" style="border-radius: 5px;">
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="border-radius: 5px;">
         <a class="navbar-brand" href="#"><img src="./images/Fiege1.png" alt="Logo" style="max-height: 40px;"></a>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav w-100 nav-justified">
@@ -49,16 +49,10 @@
                         <a class="dropdown-item" href="#">E-mail settings</a>
                     </div>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
+                <li class="nav-item">
+                    <a class="nav-link" href="./Inventory">
                         IT készlet
                     </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Új eszköz</a>
-                        <a class="dropdown-item" href="./Inventory">Eszköz kiadás/visszavét</a>
-                        <a class="dropdown-item" href="#">Személyi készlet nyomtatás</a>
-                        <a class="dropdown-item" href="#">Selejtezés</a>
-                    </div>
                 </li>
                 <li class="nav-item dropdown">
                     <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">

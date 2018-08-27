@@ -178,7 +178,14 @@ class InventoryController extends Controller
         $whom = json_decode(stripslashes($_POST['whom']), true);
 
         $newowner = Employees::findOrFail($whom);
-        $mail=$newowner->lastname." ".$newowner->firstname." részére a következő IT eszköz lett kiadva: \n\n";
+
+        if ($whom==0){
+            $mail = "Selejtezés: \n\n";
+            $subject = "Scrapping";
+        } else {
+            $mail = $newowner->lastname . " " . $newowner->firstname . " részére a következő IT eszköz lett kiadva: \n\n";
+            $subject = "Device handover";
+        }
 
         foreach ($datas as $data){
             $record = Inventory::with('owner')->findOrFail($data);
@@ -218,9 +225,8 @@ class InventoryController extends Controller
          * Send notification
          */
 
-        Mail::raw($mail, function($message)
-        {
-            $message->sender('inventory@it.com','IT Department')->subject('Device handover')->to('daniel.posztos@fiege.com');
+        Mail::raw($mail, function($message) use ($subject) {
+            $message->sender('inventory@it.com','IT Department')->subject($subject)->to('daniel.posztos@fiege.com');
         });
 
     }

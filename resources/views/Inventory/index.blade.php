@@ -130,6 +130,32 @@
                 });
             });
 
+            //Scrap
+            jsonObj = [];
+            $('.scrap').on('click', function(event){
+                id=$(this).data('id');
+                buttoninfo=$('button[data-id=' + id + ']');
+                serial=(buttoninfo.data('serial'));
+                description=(buttoninfo.data('description'));
+                tipus=(buttoninfo.data('equtype'));
+                $('td.dataTables_empty').parent().remove();
+                $(this).attr('disabled', true);
+                $('#handoverselect').val(0);
+                $('.dohandover').text('Scrap');
+                $('#handoverselect').prop('disabled', true);
+                $('#handoverdiv').show();
+                $('#handovertable').append('<tr class="handoverid' + id + '">' +
+                    '<td>' + description + '</td>' +
+                    '<td>' + tipus + '</td>' +
+                    '<td>' + serial + '</td>' +
+                    '<td class="text-right"><button class="btn btn-danger handover-cancel" data-id="'+id+'">' +
+                    '<span class="glyphicon glyphicon-edit"></span> Cancel' +
+                    '</button></td>' +
+                    '</tr>');
+
+                jsonObj.push(id);
+
+            });
 
             // Handover table display
             jsonObj = [];
