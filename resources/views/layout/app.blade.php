@@ -46,7 +46,7 @@
                         <a class="dropdown-item" href="#">IT Users</a>
                         <a class="dropdown-item" href="./Equipments">Equipment types</a>
                         <a class="dropdown-item" href="./Employees">Employees</a>
-                        <a class="dropdown-item" href="#">E-mail settings</a>
+                        <a class="dropdown-item" href="./Notifications">E-mail settings</a>
                     </div>
                 </li>
                 <li class="nav-item">

@@ -29,6 +29,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/Employees/changeStatus', array('as' => 'Employees.changeStatus', 'uses' => 'EmployeeController@changeStatus'));
     Route::resource('/Equipments', 'EqutypeController');
     Route::post('/Equipments/changeStatus', array('as' => 'Equipments.changeStatus', 'uses' => 'EqutypeController@changeStatus'));
+    Route::resource('/Notifications', 'NotificationController');
 });
 
 /***************
