@@ -54,21 +54,6 @@
                         IT készlet
                     </a>
                 </li>
-                <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
-                        Szállítólevelek
-                    </a>
-                    <div class="dropdown-menu">
-                        <a class="dropdown-item" href="#">Új szállítólevél</a>
-                        <a class="dropdown-item" href="#">Szállítólevél megnyitása</a>
-                    </div>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Log</a>
-                </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="#">Jelszó változtatás</a>
-                </li>
                 <li class="nav-item">
                 @if (Auth::guest())
                     <li class="nav-item"><a class="nav-link" href="{{ url('/login') }}">Bejelentkezés</a></li>
@@ -79,6 +64,7 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
+                            <li><a class="dropdown-item" href="#">Jelszó változtatás</a></li>
                             <li><a class="dropdown-item" href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Kijelentkezés</a></li>
                         </ul>
                     </li>

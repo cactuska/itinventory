@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Sites extends Model
 {
-    protected $table = 'dnaddress';
+    protected $table = 'sites';
     protected $fillable = ['compcode', 'companyname', 'zip', 'city', 'address', 'status'];
 
     public function items()
