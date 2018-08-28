@@ -64,7 +64,7 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <li><a class="dropdown-item" href="#">Jelszó változtatás</a></li>
+                            <li><a class="dropdown-item" href="./changePassword">Jelszó változtatás</a></li>
                             <li><a class="dropdown-item" href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Kijelentkezés</a></li>
                         </ul>
                     </li>

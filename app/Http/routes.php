@@ -44,31 +44,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::get('/Inventory/personal/{owner}', array('as' => 'Inventory.personal_inventory', 'uses' => 'InventoryController@personal_inventory'));
 });
 
-Route::get('/send_test_email', function(){
-    Mail::raw('Sending emails with Mailgun and Laravel is easy! yupi', function($message)
-    {
-        $message->to('daniel.posztos@fiege.com')->sender('keszlet@it.com', 'Test');
-    });
-});
-Route::get('/test_pdf', function () {
-
-    $fpdf = new fpdf();
-    $fpdf->AddPage();
-    $fpdf->SetFont('Courier', 'B', 18);
-    $fpdf->Cell(50, 25, 'Hello World!');
-    $pdfContent = $fpdf->Output('', "S");
-
-    return response($pdfContent, 200,
-        [
-            'Content-Type'        => 'application/pdf',
-            'Content-Length'      =>  strlen($pdfContent),
-//            'Content-Disposition' => 'attachment; filename="mypdf.pdf"',
-            'Cache-Control'       => 'private, max-age=0, must-revalidate',
-            'Pragma'              => 'public'
-        ]
-    );
-});
-
 Route::auth();
-
+Route::get('/changePassword','HomeController@showChangePasswordForm');
+Route::post('/changePassword','HomeController@changePassword')->name('changePassword');
 Route::get('/home', 'HomeController@index');
