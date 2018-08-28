@@ -28,13 +28,18 @@
     <!-- awesome font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
+    <script language="JavaScript">
+        $(document).ready(function() {
+            $('#Brand').attr('src', document.location.origin + '/itinventory/public/images/Fiege1.png');
+        });
+    </script>
 
 </head>
 <body>
 <div class="container-fluid" style="background: white;">
 
-    <nav class="navbar navbar-expand-sm bg-dark navbar-dark" style="border-radius: 5px;">
-        <a class="navbar-brand" href="#"><img src="./images/Fiege1.png" alt="Logo" style="max-height: 40px;"></a>
+    <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top" style="border-radius: 5px;">
+        <a class="navbar-brand" href="/itinventory/public"><img id="Brand" src="" alt="Logo" style="max-height: 40px;"></a>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav w-100 nav-justified">
                 <li class="nav-item dropdown">
