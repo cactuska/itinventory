@@ -19,7 +19,7 @@ class Returndoc extends Fpdf
         // Title
         $this->Cell(0,10,mb_convert_encoding('   Átvételi elismervény', 'ISO-8859-2'),'',0,'L');
         //Logo
-//        $this->Image('img/fiege1.png',160,10,30);
+        $this->Image('./images/Fiege.png',160,10,30);
         // Line break
         $this->Ln(20);
 
