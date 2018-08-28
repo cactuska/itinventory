@@ -18,9 +18,69 @@
 
         $(document).ready(function() {
 
+            // Add a device
+
+            $(document).on('click', '.add-modal', function() {
+                $('.modal-title').text('New');
+                $('#location_add').val(1);
+                $('#addModal').modal('show');
+            });
+            $('.modal-footer').on('click', '.add', function () {
+                $.ajax({
+                    type: 'POST',
+                    url: './Inventory',
+                    data: {
+                        '_token': $('meta[name="_token"]').attr('content'),
+                        'description': $('#description_add').val(),
+                        'type': $('#type_add').val(),
+                        'serial': $('#serial_add').val(),
+                        'location': $('#location_add').val(),
+                        'warranty': $('#warranty_add').val(),
+                        'pin': $('#pin_add').val(),
+                        'puk': $('#puk_add').val(),
+                        'invoiceno': $('#invoice_add').val(),
+                        'purdate': $('#purdate_add').val(),
+                        'supplyer': $('#supplyer_add').val(),
+                        'price': $('#price_add').val(),
+                        'note': $('#note_add').val()
+                    },
+                    success: function (data) {
+                        $('#inventory').append("<tr class='item" + data.id + "'>" +
+                            "<td>" + data.description + "</td>" +
+                            "<td>" + data.equtype.EquipmentType + "</td>" +
+                            "<td>" + data.serial + "</td>" +
+                            "<td><button class='personal_inventory btn btn-link' data-owner='" + data.owner.networklogonname + "'><span class='glyphicon glyphicon-edit'></span>" + data.owner.networklogonname + "</button></td>" +
+                            "<td>" + data.loc.compcode + "</td>" +
+                            "<td class='text-center'>" +
+                            "<input type='checkbox' class='handover' data-id='" + data.id +"'> &nbsp;" +
+                            "<input type='checkbox' class='visszavesz' data-id='" + data.id +"' disabled> &nbsp;" +
+                            "<input type='checkbox' class='selejtez' data-id='" + data.id +"'> &nbsp;" +
+                            "</td>" +
+                            "<td class='text-right'>" +
+                            "<button class='edit-modal btn btn-info' " +
+                            "data-id='" + data.id + "'" +
+                            "data-description='" + data.description + "'" +
+                            "data-equtype='" + data.equtype.EquipmentType + "'" +
+                            "data-serial='" + data.serial + "'" +
+                            "data-owner='" + data.owner.networklogonname + "'" +
+                            "data-pin='" + data.pin + "'" +
+                            "data-puk='" + data.puk + "'" +
+                            "data-invoiceno='" + data.invoiceno + "'" +
+                            "data-purdate='" + data.purdate + "'" +
+                            "data-supplyer='" + data.supplyer + "'" +
+                            "data-price='" + data.price + "'" +
+                            "data-warranty='" + data.warranty + "'" +
+                            "data-note='" + data.note + "'" +
+                            "data-location='" + data.loc.compcode + "'>" +
+                            "<span class='glyphicon glyphicon-edit'></span> Edit</button> " +
+                            "</td></tr>");
+                    }
+                });
+            });
+
             // Edit a post
             $(document).on('click', '.edit-modal', function() {
-                $('.modal-title').text('Szerkesztés');
+                $('.modal-title').text('Edit');
                 $('#id_edit').val($(this).data('id'));
                 $('#description_edit').val($(this).data('description'));
                 et = $(this).data('equtype');
@@ -333,6 +393,122 @@
 
 
     </script>
+
+    <!-- New device register -->
+    <div id="addModal" class="modal fade" role="dialog">
+        <div class="modal-dialog" style="max-width: 1000px;">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title"></h4>
+                    <button type="button" class="close" data-dismiss="modal">×</button>
+                </div>
+                <div class="modal-body">
+                    <form class="form-horizontal" role="form">
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="id">ID:</label>
+                                    <input type="text" class="form-control" id="id_add" disabled>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="pin">PIN:</label>
+                                    <input type="text" class="form-control" id="pin_add">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="description">Description:</label>
+                                    <input type="text" class="form-control" id="description_add" autofocus>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="puk">PUK:</label>
+                                    <input type="text" class="form-control" id="puk_add" autofocus>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="type">Type:</label>
+                                    <select name="type" class="form-control" id="type_add">
+                                        @foreach($types as $type)
+                                            <option value="{{$type->id}}">{{$type->EquipmentType}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="invoice">Invoice:</label>
+                                    <input type="text" class="form-control" id="invoice_add" autofocus>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="serial">Serial:</label>
+                                    <input type="text" class="form-control" id="serial_add">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="purdate">Purchase Date:</label>
+                                    <input type="date" class="form-control" id="purdate_add">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="owner">Owner:</label>
+                                    <input type="text" class="form-control" id="owner_add" disabled>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="supplyer">Supplyer:</label>
+                                    <input type="text" class="form-control" id="supplyer_add">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="location">Location:</label>
+                                    <select name="location" class="form-control" id="location_add">
+                                        @foreach($sites as $site)
+                                            <option value="{{$site->id}}">{{$site->compcode}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="price">Price: <small>incl. VAT</small></label>
+                                    <input type="text" class="form-control" id="price_add">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="warranty">Warranty:</label>
+                                    <input type="date" class="form-control" id="warranty_add">
+                                </div>
+                                <div class="col-sm-6">
+                                    <label class="control-label" for="note">Note:</label>
+                                    <input type="text" class="form-control" id="note_add">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-primary add" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-check'></span> Add
+                        </button>
+                        <button type="button" class="btn btn-warning" data-dismiss="modal">
+                            <span class='glyphicon glyphicon-remove'></span> Close
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <!-- Modal form to edit a form -->
     <div id="editModal" class="modal fade" role="dialog">

@@ -63,7 +63,24 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $record = new Inventory();
+        $record->description = $request->description;
+        $record->type = $request->type;
+        $record->serial = $request->serial;
+        $record->location = $request->location;
+        $record->employee = 158;
+        $record->pin = $request->pin;
+        $record->puk = $request->puk;
+        $record->invoiceno = $request->invoiceno;
+        $record->purdate = $request->purdate;
+        $record->supplyer = $request->supplyer;
+        $record->price = $request->price;
+        $record->warranty = $request->warranty;
+        $record->note = $request->note;
+        $record->save();
+
+        $record = Inventory::with('owner')->with('loc')->with('equtype')->findOrFail($record->id);
+        return response()->json($record);
     }
 
     /**
