@@ -51,12 +51,12 @@
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="./Inventory">
-                        IT készlet
+                        IT Inventory
                     </a>
                 </li>
                 <li class="nav-item">
                 @if (Auth::guest())
-                    <li class="nav-item"><a class="nav-link" href="{{ url('/login') }}">Bejelentkezés</a></li>
+                    <li class="nav-item"><a class="nav-link" href="{{ url('/login') }}">Log In</a></li>
                 @else
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
@@ -64,8 +64,8 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <li><a class="dropdown-item" href="./changePassword">Jelszó változtatás</a></li>
-                            <li><a class="dropdown-item" href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Kijelentkezés</a></li>
+                            <li><a class="dropdown-item" href="./changePassword">Change Password</a></li>
+                            <li><a class="dropdown-item" href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Log out</a></li>
                         </ul>
                     </li>
                     @endif
@@ -75,7 +75,7 @@
     </nav>
     <div class="jumbotron text-center" style="background-color: #C1252D; color: #ffffff; margin-bottom:0; padding: 40px;">
         <h1>IT Inventory Manager</h1>
-        <p>IT eszköznyilvántartó rendszer</p>
+        <p>IT Asset Management System</p>
     </div>
 
     <div style="margin-top: 50px;">

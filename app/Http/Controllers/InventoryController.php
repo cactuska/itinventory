@@ -12,6 +12,7 @@ use App\Employees;
 use App\Equtypes;
 use App\Inventory;
 use App\Logs;
+use App\Notifications;
 use App\Personal_inventory;
 use App\Returndoc;
 use App\Sites;
@@ -242,9 +243,13 @@ class InventoryController extends Controller
          * Send notification
          */
 
-        Mail::raw($mail, function($message) use ($subject) {
-            $message->sender('inventory@it.com','IT Department')->subject($subject)->to('daniel.posztos@fiege.com');
-        });
+        $recipients = Notifications::all('address');
+
+        foreach ($recipients as $recipient){
+            Mail::raw($mail, function($message) use ($subject, $recipient) {
+                $message->sender('inventory@it.com','IT Department')->subject($subject)->to($recipient->address);
+            });
+        }
 
     }
 
@@ -292,11 +297,13 @@ class InventoryController extends Controller
          * Send notification
          */
 
-        Mail::raw($mail, function($message)
-        {
-            $message->sender('inventory@it.com','IT Department')->subject('Device take back')->to('daniel.posztos@fiege.com');
-        });
+        $recipients = Notifications::all('address');
 
+        foreach ($recipients as $recipient){
+            Mail::raw($mail, function($message) use ($recipient) {
+                $message->sender('inventory@it.com','IT Department')->subject('Device take back')->to($recipient->address);
+            });
+        }
     }
 
     public function takebackdoc($owner, $array)

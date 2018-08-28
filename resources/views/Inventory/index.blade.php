@@ -293,7 +293,7 @@
                 $('td.dataTables_empty').parent().remove();
                 $(this).attr('disabled', true);
                 $('#takebackdiv').show();
-                $('#takebacktable').append('<tr class="takbackid' + id + '">' +
+                $('#takebacktable').append('<tr class="takebackid' + id + '">' +
                     '<td>' + description + '</td>' +
                     '<td>' + tipus + '</td>' +
                     '<td>' + serial + '</td>' +
