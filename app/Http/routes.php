@@ -30,6 +30,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::resource('/Equipments', 'EqutypeController');
     Route::post('/Equipments/changeStatus', array('as' => 'Equipments.changeStatus', 'uses' => 'EqutypeController@changeStatus'));
     Route::resource('/Notifications', 'NotificationController');
+    Route::resource('/Users', 'UserController');
 });
 
 /***************

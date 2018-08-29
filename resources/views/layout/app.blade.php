@@ -28,18 +28,12 @@
     <!-- awesome font -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css" integrity="sha384-XdYbMnZ/QjLh6iI4ogqCTaIjrFk87ip+ekIjefZch0Y+PvJ8CDYtEs1ipDmPorQ+" crossorigin="anonymous">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:100,300,400,700">
-    <script language="JavaScript">
-        $(document).ready(function() {
-            $('#Brand').attr('src', document.location.origin + '/itinventory/public/images/Fiege1.png');
-        });
-    </script>
-
 </head>
 <body>
 <div class="container-fluid" style="background: white;">
 
     <nav class="navbar navbar-expand-sm bg-dark navbar-dark sticky-top" style="border-radius: 5px;">
-        <a class="navbar-brand" href="/itinventory/public"><img id="Brand" src="" alt="Logo" style="max-height: 40px;"></a>
+        <a class="navbar-brand" href="{{url('')}}"><img id="Brand" src="{{url('images/Fiege1.png')}}" alt="Logo" style="max-height: 40px;"></a>
         <div class="collapse navbar-collapse" id="collapsibleNavbar">
             <ul class="navbar-nav w-100 nav-justified">
                 <li class="nav-item dropdown">
@@ -47,15 +41,15 @@
                         Törzsadatok
                     </a>
                     <div class="dropdown-menu">
-                        <a class="dropdown-item" href="./Sites">Sites</a>
-                        <a class="dropdown-item" href="#">IT Users</a>
-                        <a class="dropdown-item" href="./Equipments">Equipment types</a>
-                        <a class="dropdown-item" href="./Employees">Employees</a>
-                        <a class="dropdown-item" href="./Notifications">E-mail settings</a>
+                        <a class="dropdown-item" href="{{url('Sites')}}">Sites</a>
+                        <a class="dropdown-item" href="{{url('User')}}">IT Users</a>
+                        <a class="dropdown-item" href="{{url('Equipments')}}">Equipment types</a>
+                        <a class="dropdown-item" href="{{url('Employees')}}">Employees</a>
+                        <a class="dropdown-item" href="{{url('Notifications')}}">E-mail settings</a>
                     </div>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="./Inventory">
+                    <a class="nav-link" href="{{url('Inventory')}}">
                         IT Inventory
                     </a>
                 </li>
@@ -69,7 +63,7 @@
                         </a>
 
                         <ul class="dropdown-menu" role="menu">
-                            <li><a class="dropdown-item" href="./changePassword">Change Password</a></li>
+                            <li><a class="dropdown-item" href="{{url('changePassword')}}">Change Password</a></li>
                             <li><a class="dropdown-item" href="{{ url('/logout') }}"><i class="fa fa-btn fa-sign-out"></i>Log out</a></li>
                         </ul>
                     </li>
