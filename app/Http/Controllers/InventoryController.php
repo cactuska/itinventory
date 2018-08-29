@@ -196,21 +196,14 @@ class InventoryController extends Controller
         $whom = json_decode(stripslashes($_POST['whom']), true);
 
         $newowner = Employees::findOrFail($whom);
+        $user = Auth::user()->name;
 
-        if ($whom==0){
-            $mail = "Selejtezés: \n\n";
-            $subject = "Scrapping";
-        } else {
-            $mail = $newowner->lastname . " " . $newowner->firstname . " részére a következő IT eszköz lett kiadva: \n\n";
-            $subject = "Device handover";
-        }
+        $items = array();
 
         foreach ($datas as $data){
             $record = Inventory::with('owner')->findOrFail($data);
             $record->employee = $whom;
-
-            $mail.="Típus: ".$record->description." \n";
-            $mail.="S/N: ".$record->serial." \n\n";
+            $items[] = $record;
 
             /****************
              * Do the Logging
@@ -218,7 +211,6 @@ class InventoryController extends Controller
 
             $original=$record->getOriginal();
             $log="Changed owner on serial ".$record->serial." \n";
-
             $old = Employees::findOrFail($original['employee']);
             $log .= $old->networklogonname." -> ". $newowner->networklogonname." \n";
 
@@ -232,49 +224,52 @@ class InventoryController extends Controller
              */
 
             $record->save();
-
         }
-
-        $mail.="Üdvözlettel: \n";
-        $mail.="IT Osztály \n";
-        $mail.="Rögzítette: ".Auth::user()->name." \n";
 
         /*******************
          * Send notification
          */
 
         $recipients = Notifications::all('address');
-
-        foreach ($recipients as $recipient){
-            Mail::raw($mail, function($message) use ($subject, $recipient) {
-                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->subject($subject)->to($recipient->address);
-            });
+        if ($whom==0){
+            $subject = "Scrapping";
+            foreach ($recipients as $recipient){
+                Mail::send( ['html' => 'emails.scrapping'], ['items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
+                {
+                    $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
+                });
+            }
+        } else {
+            $employeename = $newowner->lastname . " " . $newowner->firstname;
+            $subject = "Device handover";
+            foreach ($recipients as $recipient){
+                Mail::send( ['html' => 'emails.handover'], ['employeename' => $employeename, 'items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
+                {
+                    $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
+                });
+            }
         }
-
     }
 
     public function takeback()
     {
         $datas = json_decode(stripslashes($_POST['data']), true);
-        $mail="";
+        $user = Auth::user()->name;
+        $subject='Device take back';
+        $items = array();
 
         foreach ($datas as $data){
             $record = Inventory::with('owner')->findOrFail($data);
             $record->employee = 158;
-
-            $oldowner = $record->owner->lastname." ".$record->owner->firstname;
-            if ($mail=="") {$mail=$oldowner."-tól a következő IT eszközök lettek visszavéve:\n\n";}
-
-            $mail.="Típus: ".$record->description." \n";
-            $mail.="S/N: ".$record->serial." \n\n";
+            $items[] = $record;
+            $employeename = $record->owner->lastname." ".$record->owner->firstname;
 
             /****************
              * Do the Logging
              */
 
             $log="Changed owner on serial ".$record->serial." \n";
-
-            $log .= $oldowner." -> IT osztály \n";
+            $log .= $employeename." -> IT osztály \n";
 
             $logs = new Logs();
             $logs->user = Auth::user()->name;
@@ -286,22 +281,17 @@ class InventoryController extends Controller
              */
 
             $record->save();
-
         }
-
-        $mail.="Üdvözlettel: \n";
-        $mail.="IT Osztály \n";
-        $mail.="Rögzítette: ".Auth::user()->name." \n";
 
         /*******************
          * Send notification
          */
 
         $recipients = Notifications::all('address');
-
         foreach ($recipients as $recipient){
-            Mail::raw($mail, function($message) use ($recipient) {
-                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->subject('Device take back')->to($recipient->address);
+            Mail::send( ['html' => 'emails.takeback'], ['employeename' => $employeename, 'items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
+            {
+                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
             });
         }
     }
