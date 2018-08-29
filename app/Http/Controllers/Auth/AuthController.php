@@ -31,7 +31,7 @@ class AuthController extends Controller
      *
      * @var string
      */
-    protected $redirectTo = '/';
+    protected $redirectTo = '/Inventory';
 
     /**
      * Create a new authentication controller instance.
@@ -75,7 +75,6 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
-        //return ('./Sites/');
         $this->validateLogin($request);
 
         // If the class is using the ThrottlesLogins trait, we can automatically throttle
