@@ -42,7 +42,7 @@
                     </a>
                     <div class="dropdown-menu">
                         <a class="dropdown-item" href="{{url('Sites')}}">Sites</a>
-                        <a class="dropdown-item" href="{{url('User')}}">IT Users</a>
+                        <a class="dropdown-item" href="{{url('Users')}}">IT Users</a>
                         <a class="dropdown-item" href="{{url('Equipments')}}">Equipment types</a>
                         <a class="dropdown-item" href="{{url('Employees')}}">Employees</a>
                         <a class="dropdown-item" href="{{url('Notifications')}}">E-mail settings</a>

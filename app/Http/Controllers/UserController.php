@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -50,19 +51,18 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->password = '0';
         $user->save();
 
         $recipient = $request->email;
         $subject = "Access to IT inventory";
-        $mail = "Now you have access to the IT inventory asset manager\n To set up a password, please visit".url('password/reset');
+        $mail = $request->name;
 
-        Mail::raw($mail, function($message) use ($subject, $recipient) {
-            $message->sender('inventory@it.com','IT Department')->subject($subject)->to($recipient->address);
+        Mail::send( ['html' => 'emails.newuser'], ['text' => $mail], function($message) use ($recipient, $subject)
+        {
+            $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient)->subject($subject);
         });
-
         return response()->json($user);
-
-        //todo-send mail for new user
 
     }
 

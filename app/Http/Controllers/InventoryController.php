@@ -247,7 +247,7 @@ class InventoryController extends Controller
 
         foreach ($recipients as $recipient){
             Mail::raw($mail, function($message) use ($subject, $recipient) {
-                $message->sender('inventory@it.com','IT Department')->subject($subject)->to($recipient->address);
+                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->subject($subject)->to($recipient->address);
             });
         }
 
@@ -301,7 +301,7 @@ class InventoryController extends Controller
 
         foreach ($recipients as $recipient){
             Mail::raw($mail, function($message) use ($recipient) {
-                $message->sender('inventory@it.com','IT Department')->subject('Device take back')->to($recipient->address);
+                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->subject('Device take back')->to($recipient->address);
             });
         }
     }
