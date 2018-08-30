@@ -31,6 +31,7 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/Equipments/changeStatus', array('as' => 'Equipments.changeStatus', 'uses' => 'EqutypeController@changeStatus'));
     Route::resource('/Notifications', 'NotificationController');
     Route::resource('/Users', 'UserController');
+    Route::post('/Users/renew_api/{id}', array('as' => 'Users.renew_api', 'uses' => 'UserController@renew_api'));
 });
 
 /***************

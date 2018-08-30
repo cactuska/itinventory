@@ -10,6 +10,7 @@ namespace App\Http\Controllers;
 
 use App\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
@@ -25,6 +26,10 @@ class UserController extends Controller
         $title = $this->title;
 
         $users = User::orderBy('id')->get();
+
+        foreach ($users as $user){
+            if (Auth::user()->name != $user->name){$user->api_token="***";}
+        }
 
         return view('Users.index', compact('title'), ['users' => $users]);
     }
@@ -51,6 +56,7 @@ class UserController extends Controller
         $user->username = $request->username;
         $user->name = $request->name;
         $user->email = $request->email;
+        $user->api_token = "";
         $user->password = '0';
         $user->save();
 
@@ -117,6 +123,14 @@ class UserController extends Controller
         $user = User::findOrFail($id);
         $user->delete();
 
+        return response()->json($user);
+    }
+
+    public function renew_api($id)
+    {
+        $user = User::findOrFail($id);
+        $user->api_token = str_random(60);
+        $user->save();
         return response()->json($user);
     }
 }

@@ -16,6 +16,37 @@
                 $('.modal-title').text('New');
                 $('#addModal').modal('show');
             });
+            $('#users').on('click', '.renew_api', function(){
+                $.ajax({
+                    type: 'POST',
+                    url: './Users/renew_api/'+$(this).data('id'),
+                    data: {
+                        '_token': $('meta[name="_token"]').attr('content'),
+                        'id': $(this).data('id')
+                    },
+                    success: function (data) {
+                        $('.item' + data.id).replaceWith("<tr class='item" + data.id + "'>" +
+                            "<td>" + data.username + "</td>" +
+                            "<td>" + data.name + "</td>" +
+                            "<td>" + data.email + "</td>" +
+                            "<td>" + data.api_token + "</td>" +
+                            "<td class='text-right'>" +
+                            "<button class='edit-modal btn btn-info' " +
+                            "data-id='"+ data.id +
+                            "' data-username='"+ data.username +
+                            "' data-name='"+ data.name +
+                            "' data-email='"+ data.email + "'>" +
+                            "<span class='glyphicon glyphicon-edit'></span> Edit</button> " +
+                            "<button class='delete-modal btn btn-danger' " +
+                            "data-id='"+ data.id +
+                            "' data-username='"+ data.username +
+                            "' data-name='"+ data.name +
+                            "' data-email='"+ data.email + "'>" +
+                            "<span class='glyphicon glyphicon-trash'></span> Delete</button>" +
+                            "</td></tr>");
+                    }
+                });
+            });
             $('.modal-footer').on('click', '.add', function () {
                 $.ajax({
                     type: 'POST',
@@ -31,6 +62,7 @@
                             "<td>" + data.username + "</td>" +
                             "<td>" + data.name + "</td>" +
                             "<td>" + data.email + "</td>" +
+                            "<td>" + data.api_token + "</td>" +
                             "<td class='text-right'>" +
                             "<button class='edit-modal btn btn-info' " +
                             "data-id='"+ data.id +
@@ -74,6 +106,7 @@
                             "<td>" + data.username + "</td>" +
                             "<td>" + data.name + "</td>" +
                             "<td>" + data.email + "</td>" +
+                            "<td>" + data.api_token + "</td>" +
                             "<td class='text-right'>" +
                             "<button class='edit-modal btn btn-info' " +
                             "data-id='"+ data.id +
@@ -285,13 +318,14 @@
 
         <a href="#" class="add-modal"><button class="btn btn-block btn-danger"><span class="glyphicon glyphicon-plus"></span>New user</button></a>
         <p>&nbsp;</p>
-        <div class="container" style="overflow-x: scroll;">
+        <div class="container-fluid" style="overflow-x: scroll;">
             <table class="table-hover" id="users">
                 <thead>
                 <tr>
                     <th style="text-align: center">Username</th>
                     <th style="text-align: center">Name</th>
                     <th style="text-align: center">E-mail</th>
+                    <th style="text-align: center">Apikey</th>
                     <th style="text-align: right">Action</th>
                 </tr>
                 </thead>
@@ -300,6 +334,7 @@
                     <th style="text-align: center">Username</th>
                     <th style="text-align: center">Name</th>
                     <th style="text-align: center">E-mail</th>
+                    <th style="text-align: center">Apikey</th>
                     <th style="text-align: right">Action</th>
                 </tr>
                 </tfoot>
@@ -309,6 +344,8 @@
                         <td>{{$user->username}}</td>
                         <td>{{$user->name}}</td>
                         <td>{{$user->email}}</td>
+                        <td>{{$user->api_token}} @if ($user->api_token != "***") <button class="renew_api btn btn-info" data-id="{{$user->id}}">
+                                <span class="glyphicon glyphicon-edit"></span> Renew</button>@endif</td>
                         <td class="text-right">
                             <button class="edit-modal btn btn-info" data-id="{{$user->id}}" data-username="{{$user->username}}" data-name="{{$user->name}}" data-email="{{$user->email}}">
                                 <span class="glyphicon glyphicon-edit"></span> Edit</button>
