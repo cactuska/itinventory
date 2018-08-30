@@ -556,7 +556,7 @@
                                 </div>
                                 <div class="col-sm-6">
                                     <label class="control-label" for="invoice">Invoice:</label>
-                                    <input type="text" class="form-control" id="invoice_edit" autofocus>
+                                    <input type="text" class="form-control" id="invoiceno_edit" autofocus>
                                 </div>
                             </div>
                         </div>

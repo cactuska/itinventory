@@ -80,8 +80,8 @@ class InventoryController extends Controller
         $record->note = $request->note;
 
         $logs = new Logs();
-        if (Auth::check()){ $user = Auth::user()->name; } else { $user = Auth::guard('api')->user()->name; }
-        $logs->user = $user;
+        if (Auth::check()){ $user = Auth::user()->name; $username = Auth::user()->username; } else { $user = Auth::guard('api')->user()->name; $username = Auth::guard('api')->user()->username; }
+        $logs->user = $username;
         $logs->description = "New device: ".$record->description."_".$record->serial;
         $logs->save();
 
@@ -181,7 +181,7 @@ class InventoryController extends Controller
          * Log to DB
          */
         $logs = new Logs();
-        $logs->user = Auth::user()->name;
+        $logs->user = Auth::user()->username;
         $logs->description = $log;
         $logs->save();
 
@@ -230,7 +230,7 @@ class InventoryController extends Controller
             $log .= $old->networklogonname." -> ". $newowner->networklogonname." \n";
 
             $logs = new Logs();
-            $logs->user = Auth::user()->name;
+            $logs->user = Auth::user()->username;
             $logs->description = $log;
             $logs->save();
 
@@ -287,7 +287,7 @@ class InventoryController extends Controller
             $log .= $employeename." -> IT osztály \n";
 
             $logs = new Logs();
-            $logs->user = Auth::user()->name;
+            $logs->user = Auth::user()->username;
             $logs->description = $log;
             $logs->save();
 
@@ -322,7 +322,7 @@ class InventoryController extends Controller
         $fpdf->AddPage();
         $fpdf->SetFont('Arial','',10);
         $oldowner = Employees::where('networklogonname',$owner)->get();
-        $responsible = Employees::where('networklogonname',Auth::user()->name)->get();
+        $responsible = Employees::where('networklogonname',Auth::user()->username)->get();
         $employee[] = $oldowner[0]->lastname." ".$oldowner[0]->firstname;
         $employee[] = $responsible[0]->lastname." ".$responsible[0]->firstname;
 
