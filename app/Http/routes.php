@@ -43,8 +43,13 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/Inventory/takeback', array('as' => 'Inventory.takeback', 'uses' => 'InventoryController@takeback'));
     Route::post('/Inventory/{serial}/logs', array('as' => 'Inventory.logs', 'uses' => 'InventoryController@logs'));
     Route::get('/Inventory/takebackdoc/{owner}/{array}', array('as' => 'Inventory.takebackdoc', 'uses' => 'InventoryController@takebackdoc'));
-    Route::get('/Inventory/personal/{owner}', array('as' => 'Inventory.personal_inventory', 'uses' => 'InventoryController@personal_inventory'));
+    Route::get('/Inventory/personal/{owner}', array('as' => 'Inventory.personal_inventory', 'uses' => 'InventoryControcller@personal_inventory'));
 });
+
+Route::group(['prefix' => 'api/v1', 'middleware' => 'auth:api'], function () {
+    Route::post('/excelupload', array('as' => 'Inventory.excelupload', 'uses' => 'InventoryController@excelupload'));
+});
+
 
 Route::auth();
 Route::get('/changePassword','HomeController@showChangePasswordForm');

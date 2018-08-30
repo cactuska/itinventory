@@ -78,6 +78,21 @@ class InventoryController extends Controller
         $record->price = $request->price;
         $record->warranty = $request->warranty;
         $record->note = $request->note;
+
+        $logs = new Logs();
+        if (Auth::check()){ $user = Auth::user()->name; } else { $user = Auth::guard('api')->user()->username; }
+        $logs->user = $user;
+        $logs->description = "New device: ".$record->description."_".$record->serial;
+        $logs->save();
+
+        $recipients = Notifications::all('address');
+        $subject = "New device";
+        foreach ($recipients as $recipient) {
+            Mail::send(['html' => 'emails.newdevice'], ['record' => $record, 'user' => $user], function ($message) use ($recipient, $subject) {
+                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
+            });
+        }
+
         $record->save();
 
         $record = Inventory::with('owner')->with('loc')->with('equtype')->findOrFail($record->id);
@@ -382,5 +397,12 @@ class InventoryController extends Controller
         $logs = Logs::orderBy('created_at', 'desc')->where('description', 'like', '%'.$serial.'%')->get();
         return response()->json($logs);
 
+    }
+
+    public function excelupload(Request $request)
+    {
+        $user = Auth::guard('api')->user()->username;
+        $this->store($request);
+        return "OK";
     }
 }
