@@ -80,7 +80,7 @@ class InventoryController extends Controller
         $record->note = $request->note;
 
         $logs = new Logs();
-        if (Auth::check()){ $user = Auth::user()->name; } else { $user = Auth::guard('api')->user()->username; }
+        if (Auth::check()){ $user = Auth::user()->name; } else { $user = Auth::guard('api')->user()->name; }
         $logs->user = $user;
         $logs->description = "New device: ".$record->description."_".$record->serial;
         $logs->save();
@@ -89,7 +89,7 @@ class InventoryController extends Controller
         $subject = "New device";
         foreach ($recipients as $recipient) {
             Mail::send(['html' => 'emails.newdevice'], ['record' => $record, 'user' => $user], function ($message) use ($recipient, $subject) {
-                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
+                $message->to($recipient->address)->subject($subject);
             });
         }
 
@@ -260,7 +260,7 @@ class InventoryController extends Controller
             foreach ($recipients as $recipient){
                 Mail::send( ['html' => 'emails.handover'], ['employeename' => $employeename, 'items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
                 {
-                    $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
+                    $message->to($recipient->address)->subject($subject);
                 });
             }
         }
@@ -306,7 +306,7 @@ class InventoryController extends Controller
         foreach ($recipients as $recipient){
             Mail::send( ['html' => 'emails.takeback'], ['employeename' => $employeename, 'items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
             {
-                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
+                $message->to($recipient->address)->subject($subject);
             });
         }
     }
@@ -401,7 +401,6 @@ class InventoryController extends Controller
 
     public function excelupload(Request $request)
     {
-        $user = Auth::guard('api')->user()->username;
         $this->store($request);
         return "OK";
     }

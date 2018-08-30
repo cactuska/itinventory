@@ -66,7 +66,7 @@ class UserController extends Controller
 
         Mail::send( ['html' => 'emails.newuser'], ['text' => $mail], function($message) use ($recipient, $subject)
         {
-            $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient)->subject($subject);
+            $message->to($recipient)->subject($subject);
         });
         return response()->json($user);
 

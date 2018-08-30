@@ -55,7 +55,8 @@ return [
     |
     */
 
-    'from' => ['address' => null, 'name' => null],
+    'from' => ['address' => env('MAIL_FROM'), 'name' => env('APP_NAME')],
+    'sender' => ['address' => env('MAIL_FROM'), 'name' => env('APP_NAME')],
 
     /*
     |--------------------------------------------------------------------------
