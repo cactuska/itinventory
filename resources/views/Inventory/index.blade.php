@@ -80,6 +80,11 @@
 
             // Edit a post
             $(document).on('click', '.edit-modal', function() {
+                $('#softwaretoadd').hide();
+                $('#serialtoadd').hide();
+                $('.assignsoftware').hide();
+                $(".addsoftware").attr("disabled", false);
+
                 $('.modal-title').text('Edit');
                 $('#id_edit').val($(this).data('id'));
                 $('#description_edit').val($(this).data('description'));
@@ -98,9 +103,28 @@
                 $('#price_edit').val($(this).data('price'));
                 $('#warranty_edit').val($(this).data('warranty'));
                 $('#note_edit').val($(this).data('note'));
+                var softwaretable = "<table id=\"software_table\"><thead><th>Software</th><th>Key / Serial</th><th style='text-align: right;'>Action</th></thead><tbody>";
+                $.each($(this).data('softwares'), function(key, value){
+                    softwaretable += '<tr class="softwareid' + value.id + '">' +
+                        '<td>' + value.description + '</td>' +
+                        '<td>' + value.serial + '</td>' +
+                        '<td class="text-right"><button type="button" class="btn btn-danger unassign_software" data-id="'+value.id+'">' +
+                        '<span class="glyphicon glyphicon-edit"></span> Unassign' +
+                        '</button></td>' +
+                        '</tr>';
+                });
+                softwaretable += "</tbody></table>";
                 id = $('#id_edit').val();
-                $('#editModal').modal('show');
+                console.log(softwaretable);
+                $('#softwares_edit').html(softwaretable);
 
+                $('#editModal').modal('show');
+                $('#software_table').DataTable({
+                    "paging":   false,
+                    "ordering": false,
+                    "info":     false,
+                    "searching": false
+                });
                 $.ajax({
                     type: 'POST',
                     url: './Inventory/' + serial + '/logs',
@@ -110,7 +134,7 @@
                     },
                     success: function(data) {
 
-                        var logtable = "<table id='logs'><th>Date</th><th>User</th><th>Description</th>";
+                        var logtable = "<table id='logs'><thead><th>Date</th><th>User</th><th>Description</th></thead><tbody>";
                         for (var key in data) {
                             if (data.hasOwnProperty(key)) {
                                 logtable += "<tr>";
@@ -120,12 +144,15 @@
                                 logtable += "</tr>";
                             }
                         }
-                        logtable += "</table>";
+                        logtable += "</tbody></table>";
                         logtable = nl2br(logtable);
 
                         $('.logs').html(logtable);
                         $('#logs').DataTable({
-                            "aaSorting": []
+                            "paging":   false,
+                            "ordering": false,
+                            "info":     false,
+                            "searching": false
                         });
                      }
                 });
@@ -352,6 +379,117 @@
             $('#inventory').on('click', '.personal_inventory', function(){
                 owner=$(this).data('owner');
                 window.open('./Inventory/personal/'+ owner,'_blank');
+            });
+
+            // Get unused software list
+
+            $('#addsoftware').on('click', '.addsoftware', function(){
+                $('#softwaretoadd option').each(function(){
+                    $(this).remove();
+                });
+                $('#softwaretoadd').append($("<option></option")
+                    .attr("value", "")
+                    .text(""));
+                $(".addsoftware").attr("disabled", true);
+                $.ajax({
+                    type: "POST",
+                    url: "./Inventory/getsoftwarelist",
+                    data: {
+                        '_token': $('meta[name="_token"]').attr('content')
+                    },
+                    cache: false,
+
+                    success: function (data) {
+                        $.each(data, function(key, value) {
+                            $('#softwaretoadd').append($("<option></option")
+                                .attr("value", value.description)
+                                .text(value.description));
+                        });
+                        $('#softwaretoadd').show();
+                    }
+                });
+
+            });
+
+            // Get unused software serials
+
+            $('#softwaretoadd').change(function(){
+                $('#serialtoadd option').each(function(){
+                   $(this).remove();
+                });
+                $.ajax({
+                    type: "POST",
+                    url: "./Inventory/getseriallist",
+                    data: {
+                        '_token': $('meta[name="_token"]').attr('content'),
+                        'description': $('#softwaretoadd').val()
+                    },
+                    cache: false,
+
+                    success: function (data) {
+                        $.each(data, function(key, value) {
+                            $('#serialtoadd').append($("<option></option")
+                                .attr("value", value.serial)
+                                .text(value.serial));
+                        });
+                        $('#serialtoadd').show();
+                        $('.assignsoftware').show();
+                    }
+                });
+
+            });
+
+            //Do the software assign
+            $('#addsoftware').on('click', '.assignsoftware',function(){
+                $(".assignsoftware").attr("disabled", true);
+                $.ajax({
+                    type: "POST",
+                    url: "./Inventory/assignsoftware",
+                    data: {
+                        '_token': $('meta[name="_token"]').attr('content'),
+                        'description': $('#softwaretoadd').val(),
+                        'serial': $('#serialtoadd').val(),
+                        'inventory_id': $('#id_edit').val()
+                    },
+                    cache: false,
+
+                    success: function (data) {
+                        $('#softwaretoadd').hide();
+                        $('#serialtoadd').hide();
+                        $('.assignsoftware').hide();
+                        $(".addsoftware").attr("disabled", false);
+
+                        $('td.dataTables_empty').parent().remove();
+                        $('#software_table').append('<tr class="softwareid' + data.id + '">' +
+                            '<td>' + data.description + '</td>' +
+                            '<td>' + data.serial + '</td>' +
+                            '<td class="text-right"><button type="button" class="btn btn-danger unassign_software" data-id="'+data.id+'">' +
+                            '<span class="glyphicon glyphicon-edit"></span> Unassign' +
+                            '</button></td>' +
+                            '</tr>');
+                    }
+                });
+
+            });
+
+            //Do the software unassign
+            $('#softwares_edit').on('click', '.unassign_software',function(){
+                console.log('OK');
+                $.ajax({
+                    type: "POST",
+                    url: "./Inventory/unassignsoftware",
+                    data: {
+                        '_token': $('meta[name="_token"]').attr('content'),
+                        'id': $(this).data('id'),
+                        'inventory_serial': $('#serial_edit').val()
+                    },
+                    cache: false,
+
+                    success: function (data) {
+                        $('.softwareid' + data.id).remove();
+                    }
+                });
+
             });
 
 
@@ -612,6 +750,37 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <div class="row">
+                                <div class="col-sm-12">
+                                    <label class="control-label" for="warranty">Softwares:</label>
+                                    <div id="softwares_edit">
+                                    </div>
+                                </div>
+                                <div id="addsoftware" class="col-sm-12" style="margin-bottom: 10px; margin-top: 10px;">
+                                    <button type="button" class="btn btn-primary addsoftware">
+                                        <span class='glyphicon glyphicon-check'></span> Add software
+                                    </button>
+                                    <p></p>
+                                    <div class="row">
+                                        <div class="col-sm-6">
+                                            <select class="custom-select" name="softwaretoadd" id="softwaretoadd" style="display: none">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6">
+                                            <select class="custom-select" name="serialtoadd" id="serialtoadd" style="display: none">
+                                                <option></option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <p></p>
+                                    <button type="button" class="btn btn-primary assignsoftware" data-dismiss="modal" style="display: none">
+                                        <span class='glyphicon glyphicon-check'></span> OK
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
                     </form>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-primary edit" data-dismiss="modal">
@@ -747,6 +916,7 @@
                                     data-warranty="{{$record->warranty}}"
                                     data-note="{{$record->note}}"
                                     data-location="{{$record->loc->compcode}}"
+                                    data-softwares="{{$record->softwares}}"
                             >
                                 <span class="glyphicon glyphicon-edit"></span> Edit</button>
                         </td>

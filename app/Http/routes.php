@@ -45,6 +45,15 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/Inventory/{serial}/logs', array('as' => 'Inventory.logs', 'uses' => 'InventoryController@logs'));
     Route::get('/Inventory/takebackdoc/{owner}/{array}', array('as' => 'Inventory.takebackdoc', 'uses' => 'InventoryController@takebackdoc'));
     Route::get('/Inventory/personal/{owner}', array('as' => 'Inventory.personal_inventory', 'uses' => 'InventoryController@personal_inventory'));
+    Route::post('/Inventory/getsoftwarelist', array('as' => 'Inventory.getsoftwarelist', 'uses' => 'InventoryController@getsoftwarelist'));
+    Route::post('/Inventory/getseriallist', array('as' => 'Inventory.getseriallist', 'uses' => 'InventoryController@getseriallist'));
+    Route::post('/Inventory/assignsoftware', array('as' => 'Inventory.assignsoftware', 'uses' => 'InventoryController@assignsoftware'));
+    Route::post('/Inventory/unassignsoftware', array('as' => 'Inventory.unassignsoftware', 'uses' => 'InventoryController@unassignsoftware'));
+    Route::resource('/Softwares', 'SoftwareController');
+    Route::post('/Softwares/{serial}/getdevices', array('as' => 'Softwares.getdevices', 'uses' => 'SoftwareController@getdevices'));
+    Route::post('/Softwares/getuserlist', array('as' => 'Softwares.getuserlist', 'uses' => 'SoftwareController@getuserlist'));
+    Route::post('/Softwares/getdeviceperuser', array('as' => 'Softwares.getdeviceperuser', 'uses' => 'SoftwareController@getdeviceperuser'));
+    Route::post('/Softwares/getserialperdevice', array('as' => 'Softwares.getserialperdevice', 'uses' => 'SoftwareController@getserialperdevice'));
 });
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'auth:api'], function () {

@@ -30,4 +30,9 @@ class Inventory extends Model
         return $this->belongsTo('App\Sites', 'location');
     }
 
+    public function softwares()
+    {
+        return $this->hasMany('App\Softwares', 'inventory_id');
+    }
+
 }

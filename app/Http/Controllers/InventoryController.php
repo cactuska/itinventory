@@ -17,6 +17,7 @@ use App\Personal_inventory;
 use App\Returndoc;
 use App\Sites;
 
+use App\Softwares;
 use Codedge\Fpdf\Fpdf\Fpdf;
 use Illuminate\Http\Request;
 
@@ -403,5 +404,81 @@ class InventoryController extends Controller
     {
         $this->store($request);
         return "OK";
+    }
+
+    public function getsoftwarelist()
+    {
+        $softwares = Softwares::orderBy('created_at', 'desc')->where('inventory_id', '=', '1')->get();
+        return response()->json($softwares);
+
+    }
+
+    public function getseriallist(Request $request)
+    {
+        $serials = Softwares::orderBy('created_at', 'desc')->where('inventory_id', '=', '1')->where('description', '=', $request->description)->get();
+        return response()->json($serials);
+
+    }
+
+    public function assignsoftware(Request $request)
+    {
+        $newrecord = Softwares::where('description', '=', $request->description)->where('serial', '=', $request->serial)->firstOrFail();
+        $newrecord->inventory_id = $request->inventory_id;
+        $newrecord->save();
+        $record = Softwares::with('device')->findOrFail($newrecord->id);
+        $record->networklogonname = $record->device->owner->networklogonname;
+        $record->deviceserial = $record->device->serial;
+
+        /*****************
+         * Log info gather
+         */
+
+        $log=$record->description." with key ".$record->serial." has been assigned to inventory serial ".$record->device->serial." \n";
+
+
+        /***********
+         * Log to DB
+         */
+        $logs = new Logs();
+        $logs->user = Auth::user()->username;
+        $logs->description = $log;
+        $logs->save();
+
+        /*********************
+         * Return updated data
+         */
+
+        return response()->json($record);
+    }
+
+    public function unassignsoftware(Request $request)
+    {
+        $newrecord = Softwares::findOrFail($request->id);
+        $newrecord->inventory_id = '1';
+        $newrecord->save();
+        $record = Softwares::with('device')->findOrFail($request->id);
+        $record->networklogonname = $record->device->owner->networklogonname;
+        $record->deviceserial = $record->device->serial;
+
+        /*****************
+         * Log info gather
+         */
+
+        $log=$record->description." with key ".$record->serial." has been unassigned from inventory serial ".$request->inventory_serial." \n";
+
+
+        /***********
+         * Log to DB
+         */
+        $logs = new Logs();
+        $logs->user = Auth::user()->username;
+        $logs->description = $log;
+        $logs->save();
+
+        /*********************
+         * Return updated data
+         */
+
+        return response()->json($record);
     }
 }
