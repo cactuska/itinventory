@@ -248,7 +248,7 @@ class InventoryController extends Controller
 
         $recipients = Notifications::all('address');
         if ($whom==0){
-            $subject = "Scrapping";
+            $subject = "Selejtezés";
             foreach ($recipients as $recipient){
                 Mail::send( ['html' => 'emails.scrapping'], ['items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
                 {
@@ -257,7 +257,7 @@ class InventoryController extends Controller
             }
         } else {
             $employeename = $newowner->lastname . " " . $newowner->firstname;
-            $subject = "Device handover";
+            $subject = "Kiadás";
             foreach ($recipients as $recipient){
                 Mail::send( ['html' => 'emails.handover'], ['employeename' => $employeename, 'items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
                 {
@@ -271,7 +271,7 @@ class InventoryController extends Controller
     {
         $datas = json_decode(stripslashes($_POST['data']), true);
         $user = Auth::user()->name;
-        $subject='Device take back';
+        $subject='Visszavétel';
         $items = array();
 
         foreach ($datas as $data){
