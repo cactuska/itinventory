@@ -48,10 +48,14 @@
                         <a class="dropdown-item" href="{{url('Notifications')}}">E-mail settings</a>
                     </div>
                 </li>
-                <li class="nav-item">
-                    <a class="nav-link" href="{{url('Inventory')}}">
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbardrop" data-toggle="dropdown">
                         IT Inventory
                     </a>
+                    <div class="dropdown-menu">
+                        <a class="dropdown-item" href="{{url('Inventory')}}">Devices</a>
+                        <a class="dropdown-item" href="{{url('Softwares')}}">Softwares</a>
+                    </div>
                 </li>
                 <li class="nav-item">
                 @if (Auth::guest())

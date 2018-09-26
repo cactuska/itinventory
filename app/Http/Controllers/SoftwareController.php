@@ -223,4 +223,10 @@ class SoftwareController extends Controller
             ->get();
         return response()->json($users);
     }
+
+    public function excelsoftwareupload(Request $request)
+    {
+        $this->store($request);
+        return "OK";
+    }
 }

@@ -58,6 +58,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['prefix' => 'api/v1', 'middleware' => 'auth:api'], function () {
     Route::post('/excelupload', array('as' => 'Inventory.excelupload', 'uses' => 'InventoryController@excelupload'));
+    Route::post('/excelsoftwareupload', array('as' => 'Softwares.excelsoftwareupload', 'uses' => 'SoftwareController@excelsoftwareupload'));
 });
 
 
