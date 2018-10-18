@@ -62,7 +62,7 @@
                 $('.modal-title').text('Edit');
                 $('#id_edit').val($(this).data('id'));
                 $('#description_edit').val($(this).data('description'));
-                $('#serial_edit').val($(this).data('serial').replace(/\//g, '_'));
+                $('#serial_edit').val($(this).data('serial'));
                 $('#invoiceno_edit').val($(this).data('invoiceno'));
                 $('#purdate_edit').val($(this).data('purdate'));
                 $('#expdate_edit').val($(this).data('expdate'));
