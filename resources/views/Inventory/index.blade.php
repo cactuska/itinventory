@@ -509,7 +509,14 @@
             var table = $('#inventory').DataTable({
                 "dom": 'Bfrtip',
                 "buttons": [
-                    'copy', 'csv', 'excel', 'pdf'
+                    'csv', 'excel'
+                ],
+                "columnDefs": [
+                    {
+                        "targets": [ 0, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15 ],
+                        "visible": false,
+                        "searchable": false
+                    }
                 ],
                 "pageLength": 50,
                 "aaSorting": []
@@ -863,22 +870,44 @@
             <table class="table-hover" id="inventory">
                 <thead>
                 <tr>
+                    <th style="text-align: left">ID</th>
                     <th style="text-align: left">Description</th>
                     <th style="text-align: left">Type</th>
                     <th style="text-align: left">Serial</th>
                     <th style="text-align: left">Network Logon Name</th>
                     <th style="text-align: left">Location</th>
+                    <th style="text-align: left">Supplyer</th>
+                    <th style="text-align: left">Invoiceno</th>
+                    <th style="text-align: left">Purdate</th>
+                    <th style="text-align: left">Warranty</th>
+                    <th style="text-align: left">Price</th>
+                    <th style="text-align: left">Pin</th>
+                    <th style="text-align: left">Puk</th>
+                    <th style="text-align: left">Note</th>
+                    <th style="text-align: left">Created_At</th>
+                    <th style="text-align: left">Updated_At</th>
                     <th style="text-align: left">Handover - TakeBack - Scrap</th>
                     <th style="text-align: right">Action</th>
                 </tr>
                 </thead>
                 <tfoot style="display: table-header-group;">
                 <tr>
+                    <th style="text-align: left">ID</th>
                     <th style="text-align: left">Description</th>
                     <th style="text-align: left">Type</th>
                     <th style="text-align: left">Serial</th>
                     <th style="text-align: left">Network Logon Name</th>
                     <th style="text-align: left">Location</th>
+                    <th style="text-align: left">Supplyer</th>
+                    <th style="text-align: left">Invoiceno</th>
+                    <th style="text-align: left">Purdate</th>
+                    <th style="text-align: left">Warranty</th>
+                    <th style="text-align: left">Price</th>
+                    <th style="text-align: left">Pin</th>
+                    <th style="text-align: left">Puk</th>
+                    <th style="text-align: left">Note</th>
+                    <th style="text-align: left">Created_At</th>
+                    <th style="text-align: left">Updated_At</th>
                     <th style="text-align: left">Handover - TakeBack - Scrap</th>
                     <th style="text-align: right">Action</th>
                 </tr>
@@ -886,6 +915,7 @@
                 <tbody>
                 @foreach($records as $record)
                     <tr class="item{{$record->id}}">
+                        <td>{{$record->id}}</td>
                         <td>{{$record->description}}</td>
                         <td>{{$record->equtype->EquipmentType}}</td>
                         <td>{{$record->serial}}</td>
@@ -895,6 +925,16 @@
                                 {{$record->owner->networklogonname}}
                             </button></td>
                         <td>{{$record->loc->compcode}}</td>
+                        <td>{{$record->supplyer}}</td>
+                        <td>{{$record->invoiceno}}</td>
+                        <td>{{$record->purdate}}</td>
+                        <td>{{$record->warranty}}</td>
+                        <td>{{$record->price}}</td>
+                        <td>{{$record->pin}}</td>
+                        <td>{{$record->puk}}</td>
+                        <td>{{$record->note}}</td>
+                        <td>{{$record->created_at}}</td>
+                        <td>{{$record->updated_at}}</td>
                         <td class="text-center">
                             <input type="checkbox" class="handover" data-id="{{$record->id}}" @if ($record->employee==0 or $record->employee<>158) disabled @endif>&nbsp;
                             <input type="checkbox" class="takeback" data-id="{{$record->id}}" @if ($record->employee==158 or $record->employee==0) disabled @endif>&nbsp;
