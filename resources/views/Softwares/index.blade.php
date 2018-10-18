@@ -23,7 +23,7 @@
                     data: {
                         '_token': $('meta[name="_token"]').attr('content'),
                         'description': $('#description_add').val(),
-                        'serial': $('#serial_add').val(),
+                        'serial': $('#serial_add').val().replace(/\//g, '_'),
                         'invoiceno': $('#invoiceno_add').val(),
                         'purdate': $('#purdate_add').val(),
                         'expdate': $('#expdate_add').val(),
@@ -62,7 +62,7 @@
                 $('.modal-title').text('Edit');
                 $('#id_edit').val($(this).data('id'));
                 $('#description_edit').val($(this).data('description'));
-                $('#serial_edit').val($(this).data('serial'));
+                $('#serial_edit').val($(this).data('serial').replace(/\//g, '_'));
                 $('#invoiceno_edit').val($(this).data('invoiceno'));
                 $('#purdate_edit').val($(this).data('purdate'));
                 $('#expdate_edit').val($(this).data('expdate'));
@@ -288,7 +288,7 @@
                     data: {
                         '_token': $('meta[name="_token"]').attr('content'),
                         'description': $('#description_edit').val(),
-                        'serial': $('#serial_edit').val(),
+                        'serial': $('#serial_edit').val().replace(/\//g, '_'),
                         'invoiceno': $('#invoiceno_edit').val(),
                         'purdate': $('#purdate_edit').val(),
                         'expdate': $('#expdate_edit').val(),
