@@ -87,10 +87,10 @@ class InventoryController extends Controller
         $logs->save();
 
         $recipients = Notifications::all('address');
-        $subject = "New device";
+        $subject = "Új eszköz";
         foreach ($recipients as $recipient) {
             Mail::send(['html' => 'emails.newdevice'], ['record' => $record, 'user' => $user], function ($message) use ($recipient, $subject) {
-                $message->to($recipient->address)->subject($subject);
+                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
             });
         }
 
@@ -261,7 +261,7 @@ class InventoryController extends Controller
             foreach ($recipients as $recipient){
                 Mail::send( ['html' => 'emails.handover'], ['employeename' => $employeename, 'items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
                 {
-                    $message->to($recipient->address)->subject($subject);
+                    $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
                 });
             }
         }
@@ -307,7 +307,7 @@ class InventoryController extends Controller
         foreach ($recipients as $recipient){
             Mail::send( ['html' => 'emails.takeback'], ['employeename' => $employeename, 'items' => $items, 'user' => $user], function($message) use ($recipient, $subject)
             {
-                $message->to($recipient->address)->subject($subject);
+                $message->sender(env('MAIL_FROM'), env('APP_NAME'))->to($recipient->address)->subject($subject);
             });
         }
     }
