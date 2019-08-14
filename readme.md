@@ -31,7 +31,7 @@ The PDFs and mails are in hungarian, you need to do the translation, or create n
 
 
 # Written in
-## Laravel PHP Framework
+## Laravel PHP Framework version 5.2.45
 
 [![Build Status](https://travis-ci.org/laravel/framework.svg)](https://travis-ci.org/laravel/framework)
 [![Total Downloads](https://poser.pugx.org/laravel/framework/d/total.svg)](https://packagist.org/packages/laravel/framework)
