@@ -58,13 +58,20 @@ class Personal_inventory extends Fpdf
         // Arial italic 8
         $this->SetFont('Arial','I',8);
         // Page number
+        $this->Cell(10,10,mb_convert_encoding('2016-11-30/2.0 ', 'ISO-8859-2'),'0',0,'L');
+        $this->Ln(0);
         $this->Cell(0,10,'Page '.$this->PageNo().'/{nb}',0,0,'C');
     }
 
 //FancyTable
 
-    function FancyTable($employee, $networklogonname, $header, $data)
+    function FancyTable($employee, $networklogonname, $header, $data, $dataURI)
     {
+        $TEMPIMGLOC = 'tempimg.png';
+        $dataPieces = explode(',',$dataURI);
+        $encodedImg = $dataPieces[1];
+        $decodedImg = base64_decode($encodedImg);
+
         $this->Cell(30,6,mb_convert_encoding('Dolgozó neve:', 'ISO-8859-2'),'',0,'R');
         $this->Cell(10);
         $this->SetFont('Arial','B',10);
@@ -111,10 +118,22 @@ class Personal_inventory extends Fpdf
         $this->Cell(50,6,mb_convert_encoding('Dátum:', 'ISO-8859-2'),'',0,'R');
         $this->Cell(10);
         $this->Cell(50,6,date("Y-m-d"),'',0,'L');
-        $this->Ln(10);
-        $this->Cell(50,6,mb_convert_encoding('Aláírás:', 'ISO-8859-2'),'',0,'R');
-        $this->Ln(30);
-        $this->Cell(10,6,mb_convert_encoding('2016-11-30/2.0 ', 'ISO-8859-2'),'',0,'L');
+        $this->Ln(1);
+        $this->Cell(50,28,mb_convert_encoding('Aláírás:', 'ISO-8859-2'),'',0,'R');
+
+        if( $decodedImg!==false )
+        {
+            //  Save image to a temporary location
+            if( file_put_contents($TEMPIMGLOC,$decodedImg)!==false )
+            {
+                //  Open new PDF document and print image
+                $this->Image($TEMPIMGLOC, null, null, 70, 20);
+
+                //  Delete image from server
+                unlink($TEMPIMGLOC);
+            }
+        }
+
         $this->Ln();
     }
 }

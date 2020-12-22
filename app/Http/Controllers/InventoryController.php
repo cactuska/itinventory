@@ -350,6 +350,53 @@ class InventoryController extends Controller
         );
     }
 
+    public function personal_inventory_sign(Request $request)
+    {
+        if (isset($request->signature))
+        {
+            $tosave = True;
+            $dataURI = $request->signature;
+            $owner = $request->user;
+        }
+        $data = array();
+
+        $fpdf = new Personal_inventory();
+        $fpdf->AliasNbPages();
+        $fpdf->AddPage();
+        $fpdf->SetFont('Arial','',10);
+
+        $record = Employees::where('networklogonname',$owner)->get();
+        $employee = $record[0]->lastname." ".$record[0]->firstname;
+        $networklogonname = $record[0]->networklogonname;
+        $emp_id = $record[0]->id;
+
+        $tools = Inventory::where('employee', $emp_id)->get();
+
+        foreach ($tools as $tool) {
+            $handover = Logs::where('description', 'like', '%Eszköz kiadás '.$tool->serial.'%')->orWhere('description', 'like', '%Changed owner on serial '.$tool->serial.'%')->orderBy('created_at','desc')->get()->first();;
+            if ( !$handover) {$date="";} else {$date=$handover->created_at;}
+
+            if ($tool->serial == "") {$date="";}
+            $data[] = $tool->description;
+            $data[] = $tool->serial;
+            $data[] = $date;
+            $data[] = 'Office';
+        }
+
+        $header = array('Eszköz neve:', 'Szériaszáma', 'Felhasználás kezdete', 'Helye');
+        $fpdf->FancyTable($employee, $networklogonname, $header, $data, $dataURI);
+        $filename = "/var/www/html/itinventory/public/signed/".$owner.".pdf";
+        $pdfContent = $fpdf->Output($filename, "F");
+
+        return view('Inventory.document', compact('title'), ['pdfContent' => base64_encode($pdfContent)]);
+
+    }
+
+    public function personal_inventory_signed($owner)
+    {
+        return view('Inventory.signed', compact('title'), ['user' => $owner]);
+    }
+
     public function personal_inventory($owner)
     {
         $data = array();
@@ -368,7 +415,6 @@ class InventoryController extends Controller
 
         foreach ($tools as $tool) {
             $handover = Logs::where('description', 'like', '%Eszköz kiadás '.$tool->serial.'%')->orWhere('description', 'like', '%Changed owner on serial '.$tool->serial.'%')->orderBy('created_at','desc')->get()->first();;
-//            if ( !$handover) {$date="";} else {$date=$handover->created_at;}
             if ( !$handover) {$date="";} else {$date=$handover->created_at;}
 
             if ($tool->serial == "") {$date="";}
@@ -379,18 +425,13 @@ class InventoryController extends Controller
         }
 
         $header = array('Eszköz neve:', 'Szériaszáma', 'Felhasználás kezdete', 'Helye');
-        $fpdf->FancyTable($employee, $networklogonname, $header, $data);
 
+        $dataURI = "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAA8YAAADyCAYAAACPktznAAAD2ElEQVR4nO3ZsQ2AIBCGUXZyTBzhKNmGnbAgDqAWBHkv+fpr/1xKAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADwyHmMAAAAYEu5jwAAAGA79yjObfYlAAAAMIFvMQAAAMB3EVFLKV2SJEmSVi4i6ux9xaIMY0mSJEl/yDAGAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAHjlAmLbTUzvlUs/AAAAAElFTkSuQmCC";
+        $fpdf->FancyTable($employee, $networklogonname, $header, $data, $dataURI);
         $pdfContent = $fpdf->Output('', "S");
 
-        return response($pdfContent, 200,
-            [
-                'Content-Type'        => 'application/pdf',
-                'Content-Length'      =>  strlen($pdfContent),
-                'Cache-Control'       => 'private, max-age=0, must-revalidate',
-                'Pragma'              => 'public'
-            ]
-        );
+        return view('Inventory.document', compact('title'), ['pdfContent' => base64_encode($pdfContent)]);
+
     }
 
     public function logs($serial)

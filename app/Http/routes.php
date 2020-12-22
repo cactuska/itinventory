@@ -45,6 +45,8 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/Inventory/{serial}/logs', array('as' => 'Inventory.logs', 'uses' => 'InventoryController@logs'));
     Route::get('/Inventory/takebackdoc/{owner}/{array}', array('as' => 'Inventory.takebackdoc', 'uses' => 'InventoryController@takebackdoc'));
     Route::get('/Inventory/personal/{owner}', array('as' => 'Inventory.personal_inventory', 'uses' => 'InventoryController@personal_inventory'));
+    Route::post('/Inventory/personal/sign', array('as' => 'Inventory.personal_inventory_sign', 'uses' => 'InventoryController@personal_inventory_sign'));
+    Route::get('/Inventory/personal/signed/{owner}', array('as' => 'Inventory.personal_inventory_signed', 'uses' => 'InventoryController@personal_inventory_signed'));
     Route::post('/Inventory/getsoftwarelist', array('as' => 'Inventory.getsoftwarelist', 'uses' => 'InventoryController@getsoftwarelist'));
     Route::post('/Inventory/getseriallist', array('as' => 'Inventory.getseriallist', 'uses' => 'InventoryController@getseriallist'));
     Route::post('/Inventory/assignsoftware', array('as' => 'Inventory.assignsoftware', 'uses' => 'InventoryController@assignsoftware'));

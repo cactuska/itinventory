@@ -1,7 +1,9 @@
 @extends('layout.app')
 
 @section('content')
-
+    <link rel="stylesheet" href="{{url('lib/jquery-contextmenu/2.7.1/jquery.contextMenu.min.css')}}">
+    <script src="{{url('lib/jquery-contextmenu/2.7.1/jquery.contextMenu.min.js')}}"></script>
+    <script src="{{url('lib/jquery-contextmenu/2.7.1/jquery.ui.position.js')}}"></script>
     <script>
         $(window).load(function(){
             $('#inventory').removeAttr('style');
@@ -381,6 +383,46 @@
                 window.open('./Inventory/personal/'+ owner,'_blank');
             });
 
+            //$('#inventory').on('contextmenu', '.personal_inventory', function(){
+                //alert('jobb gomb!');
+                //owner=$(this).data('owner');
+                //window.open('./Inventory/personal/'+ owner,'_blank');
+                //return false;
+            //});
+$(function(){
+    $.contextMenu({
+        selector: '.personal_inventory',
+        items: {
+            key: {
+                name: "Last signed document",
+                callback: function(itemKey, opt, e){
+                    window.open("{{url('/Inventory/personal/signed/')}}/"+ opt.$trigger[0].innerText);
+                    return true;
+                }
+            }
+        },
+        events: {
+            show: function(opt) {
+                // this is the trigger element
+                var $this = this;
+                // import states from data store
+                $.contextMenu.setInputValues(opt, $this.data());
+                // this basically fills the input commands from an object
+                // like {name: "foo", yesno: true, radio: "3", &hellip;}
+            },
+            hide: function(opt) {
+                // this is the trigger element
+                var $this = this;
+                // export states to data store
+                $.contextMenu.getInputValues(opt, $this.data());
+                // this basically dumps the input commands' values to an object
+                // like {name: "foo", yesno: true, radio: "3", &hellip;}
+            }
+        }
+    });
+});
+
+
             // Get unused software list
 
             $('#addsoftware').on('click', '.addsoftware', function(){
@@ -539,7 +581,7 @@
 
     </script>
 
-    <!-- New device register -->
+    <!-- New device register TEST -->
     <div id="addModal" class="modal fade" role="dialog">
         <div class="modal-dialog" style="max-width: 1000px;">
             <div class="modal-content">
